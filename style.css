@@ -88,20 +88,20 @@ header {
     margin-top: 10px;
 }
 
-/* About Section */
-.about, .services {
+/* Services Section */
+.services, .request {
     max-width: 1200px;
     margin: 40px auto;
     padding: 20px;
     text-align: center;
 }
 
-.about h2, .services h2 {
+.services h2, .request h2 {
     font-size: 2rem;
     margin-bottom: 10px;
 }
 
-/* Services Section */
+/* Services Grid */
 .services-grid {
     display: flex;
     flex-wrap: wrap;
@@ -115,6 +115,38 @@ header {
     padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
+}
+
+/* Request Form */
+.request form {
+    max-width: 500px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.request label {
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.request select {
+    padding: 10px;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.request button {
+    background-color: #28a745;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.request button:hover {
+    background-color: #218838;
 }
 
 /* Responsive */

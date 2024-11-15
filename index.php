@@ -1,8 +1,18 @@
 <?php
+// Inclure la configuration de la base de données
+require_once 'db_config.php';
+
 session_start(); // Démarre la session
 
 // Vérifie si l'utilisateur est connecté
 $isLoggedIn = isset($_SESSION['user_id']); // Si l'utilisateur est connecté, la session existe
+
+// Récupérer les services depuis la base de données (incluant la description)
+$sql = "SELECT * FROM service";
+$stmt = $pdo->query($sql);
+
+// Fermer la connexion à la base de données
+// L'objet PDO sera automatiquement détruit à la fin du script
 ?>
 
 <!DOCTYPE html>
@@ -15,30 +25,7 @@ $isLoggedIn = isset($_SESSION['user_id']); // Si l'utilisateur est connecté, la
 </head>
 <body>
     <!-- Navbar -->
-    <header>
-        <nav class="navbar">
-            <div class="logo">Pressing Pro</div>
-            <ul class="nav-links">
-                <li><a href="#about">À propos</a></li>
-                <li><a href="#services">Services</a></li>
-                <li><a href="#contact">Contact</a></li>
-                
-                <?php if ($isLoggedIn): ?>
-                    <!-- Si l'utilisateur est connecté, afficher le bouton Déconnexion -->
-                    <li><a href="logout.php" class="btn btn-logout">Déconnexion</a></li>
-                <?php else: ?>
-                    <!-- Si l'utilisateur n'est pas connecté, afficher les boutons Connexion et Inscription -->
-                    <li><a href="users/login.php" class="btn btn-login">Connexion</a></li>
-                    <li><a href="users/signup.php" class="btn btn-register">Inscription</a></li>
-                <?php endif; ?>
-            </ul>
-            <div class="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-        </nav>
-    </header>
+    <?php include 'navbar.php'; ?>
 
     <!-- Main content -->
     <main>
@@ -48,30 +35,46 @@ $isLoggedIn = isset($_SESSION['user_id']); // Si l'utilisateur est connecté, la
             <p>Un service de nettoyage professionnel pour vos vêtements et textiles.</p>
         </section>
 
-        <!-- About Section -->
-        <section id="about" class="about">
-            <h2>À propos de nous</h2>
-            <p>Pressing Pro est votre partenaire de confiance pour tous vos besoins de nettoyage et d'entretien de vêtements. Nous offrons des services de qualité pour particuliers et professionnels.</p>
-        </section>
-
         <!-- Services Section -->
         <section id="services" class="services">
             <h2>Nos Services</h2>
             <div class="services-grid">
-                <div class="service-item">
-                    <h3>Nettoyage à sec</h3>
-                    <p>Un traitement professionnel pour vos vêtements délicats.</p>
-                </div>
-                <div class="service-item">
-                    <h3>Blanchisserie</h3>
-                    <p>Nettoyage et repassage pour garder vos textiles frais et impeccables.</p>
-                </div>
-                <div class="service-item">
-                    <h3>Réparation et Retouche</h3>
-                    <p>Réparez et ajustez vos vêtements pour un ajustement parfait.</p>
-                </div>
+                <?php
+                // Afficher les services récupérés depuis la base de données
+                if ($stmt->rowCount() > 0) {
+                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                        echo "<div class='service-item'>";
+                        echo "<h3>" . $row['nom_service'] . "</h3>";
+                        echo "<p>Prix : " . $row['prix_service'] . "</p>";
+                        echo "<p>Description : " . $row['description'] . "</p>"; // Affichage de la description
+                        echo "</div>";
+                    }
+                } else {
+                    echo "<p>Aucun service disponible pour le moment.</p>";
+                }
+                ?>
             </div>
         </section>
+
+        <!-- Service Request Form (Visible only when logged in) -->
+        <?php if ($isLoggedIn): ?>
+        <section id="request" class="request">
+            <h2>Demander un service</h2>
+            <form action="process_request.php" method="POST">
+                <label for="service">Choisissez un service</label>
+                <select id="service" name="service" required>
+                    <?php
+                    // Remise à zéro de la connexion pour récupérer les services
+                    $stmt = $pdo->query("SELECT * FROM service");
+                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                        echo "<option value='" . $row['id_service'] . "'>" . $row['nom_service'] . "</option>";
+                    }
+                    ?>
+                </select>
+                <button type="submit">Envoyer la demande</button>
+            </form>
+        </section>
+        <?php endif; ?>
     </main>
 
     <!-- JavaScript for mobile navbar toggle -->
