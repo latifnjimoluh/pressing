@@ -3,11 +3,6 @@
 require_once '../../db_config.php';
 session_start();
 
-// Vérifier si l'utilisateur est déjà connecté
-if (isset($_SESSION['user_id'])) {
-    header("Location: ../index.php"); // Rediriger vers le tableau de bord si déjà connecté
-    exit;
-}
 
 // Traitement du formulaire de connexion
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

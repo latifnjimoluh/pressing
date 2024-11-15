@@ -20,14 +20,8 @@ $username = $_SESSION['username']; // Récupérer le nom d'utilisateur de la ses
 </head>
 <body>
     <header>
-        <nav class="navbar">
-            <div class="logo">Pressing Pro</div>
-            <ul class="nav-links">
-                <li><a href="services/service.php">Gestion des Services</a></li>
-                <li><a href="admin_users.php">Gestion des Utilisateurs</a></li>
-                <li><a href="logout.php" class="btn btn-logout">Déconnexion</a></li>
-            </ul>
-        </nav>
+    <?php include 'navbar.php'; ?>
+
     </header>
 
     <main>
